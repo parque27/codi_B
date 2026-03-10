@@ -1,20 +1,72 @@
-Pràctica 1 - Configuracio d’un equip de treball
+# Pràctica 1 - Configuracio d'un equip de treball
 
-Pau Arqueros i Sureda, Bouthaina Fekkak Baghdadi
+**Pau Arqueros i Sureda, Bouthaina Fekkak Baghdadi**
+**u1972850, u1978926**
 
-Problema
+---
+
+## Problema
 
 Hem de seleccionar un equip de persones minimitzant el cost total. El cost té tres parts:
-Cost individual de cada persona seleccionada,
-Penalització per parelles incompatibles seleccionades juntes,
-Penalització per desviació de la mida ideal de l'equip,
+- Cost individual de cada persona seleccionada
+- Penalització per parelles incompatibles seleccionades juntes
+- Penalització per desviació de la mida ideal de l'equip
 
-Representacó del estat
-Cada estat és una llista de 0 persona no seleccionada i 1 persona seleccionada
+---
 
-El veïnat es genera canviant una única persona canviantla de 0 a 1 o 1 a 0. Cada estat té n veïns un per cada persona.
+## Representació de l'estat
 
+Cada estat és una llista de 0 persona no seleccionada i 1 persona seleccionada.
+
+---
+
+## Veïnat
+
+El veïnat es genera canviant una única persona canviant-la de 0 a 1 o 1 a 0. Cada estat té n veïns, un per cada persona.
+
+---
+
+## Funció de cost
+```
 cost_total = suma de costos individuals + suma de penalitzacions incompatibles + α·|mida_actual − M|
-mida_actual = nombre de persones seleccionades
-M = mida ideal de l'equip
-alpha = factor de ponderació
+```
+
+- `mida_actual` = nombre de persones seleccionades
+- `M` = mida ideal de l'equip
+- `alpha` = factor de ponderació
+
+---
+
+## Algoritme: Hill Climbing amb reinici aleatori
+
+1. Es parteix d'un estat inicial aleatori
+2. Es mou al veí de menor cost
+3. Quan cap veí millora l'estat actual (mínim local), es reinicia des d'un punt aleatori
+4. Es guarda sempre el millor estat trobat globalment
+
+**Criteris d'aturada:**
+- S'han exhaurit les `K` iteracions totals
+- S'han fet `max_reinicis_sense_millora` reinicis consecutius sense millorar el millor cost global
+
+---
+
+## Estructura del projecte
+```
+codi_B/
+├── executa_hill_climbing.py       # Punt d'entrada del programa
+├── problemes/
+│   ├── problema.py                # Classe base abstracta del problema
+│   └── el_meu_problema.py         # Implementació concreta del problema
+└── algoritmes/
+    ├── algoritme_cerca_local.py   # Classe base abstracta de l'algoritme
+    └── hill_climbing.py           # Implementació del Hill Climbing
+```
+
+---
+
+## Execució
+
+Des de la carpeta `codi_B/`:
+```bash
+python executa_hill_climbing.py
+```
