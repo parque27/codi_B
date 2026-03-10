@@ -1,0 +1,20 @@
+Pràctica 1 - Configuracio d’un equip de treball
+
+Pau Arqueros i Sureda, Bouthaina Fekkak Baghdadi
+
+Problema
+
+Hem de seleccionar un equip de persones minimitzant el cost total. El cost té tres parts:
+Cost individual de cada persona seleccionada,
+Penalització per parelles incompatibles seleccionades juntes,
+Penalització per desviació de la mida ideal de l'equip,
+
+Representacó del estat
+Cada estat és una llista de 0 persona no seleccionada i 1 persona seleccionada
+
+El veïnat es genera canviant una única persona canviantla de 0 a 1 o 1 a 0. Cada estat té n veïns un per cada persona.
+
+cost_total = suma de costos individuals + suma de penalitzacions incompatibles + α·|mida_actual − M|
+mida_actual = nombre de persones seleccionades
+M = mida ideal de l'equip
+alpha = factor de ponderació

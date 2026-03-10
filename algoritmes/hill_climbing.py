@@ -27,66 +27,63 @@ class HillClimbing(AlgoritmeCercaLocal):
             millor_estat_global: millor estat trobat en tots els reinicis
             historic_cost: llista amb el millor cost global a cada iteració
         """
-
-        # Inicialitzem el millor estat global
+        # inicialitzem les variables globals (el millor que hem vist fins ara)
         millor_estat_global = None
-        millor_cost_global = float('inf')  # Infinit, ja que volem minimitzar
+        millor_cost_global = float('inf')
 
-        historic_cost = []          # Historial del millor cost global a cada iteració
-        iteracions_totals = 0       # Comptador d'iteracions totals
-        reinicis_sense_millora = 0  # Comptador de reinicis consecutius sense millora global
+        # historial per pintar la gràfica després, i comptadors de control
+        historic_cost = []
+        iteracions_totals = 0
+        reinicis_sense_millora = 0
 
-        # Bucle principal: reinicis aleatoris
-        # Mirem que K < K (param) && reinicis < reinicis (param)
+        # bucle de reinicis: parem si exhaurim K o portem massa reinicis sense millorar
         while iteracions_totals < self.K and reinicis_sense_millora < self.max_reinicis_sense_millora:
 
-            # Guardem el millor cost global ABANS d'aquest reinici per comparar després
+            # guardem el cost abans per saber si aquest reinici ha servit de algo
             millor_cost_abans_reinici = millor_cost_global
 
-            # Partim d'un estat inicial aleatori en cada reinici
+            # generem un estat inicial aleatori i calculem el seu cost
             estat_actual = problema.estat_inicial()
             cost_actual = problema.cost(estat_actual)
 
-            # Actualitzem el millor global si cal i afegim a l'historial
+            # comprovem si aquest estat inicial ja és millor que el global
             if cost_actual < millor_cost_global:
                 millor_estat_global = estat_actual
                 millor_cost_global = cost_actual
             historic_cost.append(millor_cost_global)
             iteracions_totals += 1
 
-            # --- HILL CLIMBING LOCAL (fins a mínim local o exhaurir K) ---
+            # hill climbing local: ens movem sempre cap al millor veí fins a mínim local
             while iteracions_totals < self.K:
 
-                # Obtenim tots els veïns de l'estat actual
+                # obtenim el veí amb menor cost
                 veins = problema.veinat(estat_actual)
-
-                # Trobem el millor veí (mínim cost, ja que és minimització)
                 millor_vei = min(veins, key=problema.cost)
                 cost_millor_vei = problema.cost(millor_vei)
 
-                # Si el millor veí no millora l'estat actual, mínim local assolit
+                # mínim local, cap veí millora l'actual, sortim del bucle intern
                 if not problema.es_millor(millor_vei, estat_actual):
                     break
 
-                # Ens movem al millor veí
+                # ens movem al millor veí
                 estat_actual = millor_vei
                 cost_actual = cost_millor_vei
 
-                # Actualitzem el millor global si aquest veí és millor
+                # actualitzem el millor global si hem millorat
                 if cost_actual < millor_cost_global:
                     millor_estat_global = estat_actual
                     millor_cost_global = cost_actual
 
-                # Afegim el millor cost global a l'historial
                 historic_cost.append(millor_cost_global)
                 iteracions_totals += 1
 
-            # Comparem el millor cost global ABANS i DESPRÉS del reinici
+            # comprovem si aquest reinici ha aportat millora global o no
             if millor_cost_global < millor_cost_abans_reinici:
-                reinicis_sense_millora = 0  # Aquest reinici ha millorat el global
+                reinicis_sense_millora = 0
             else:
-                reinicis_sense_millora += 1  # Aquest reinici no ha aportat res nou
-            print(f"Reinicis sense millora en acabar: {reinicis_sense_millora}")
-            print(f"Iteracions totals: {iteracions_totals}")
-
+                reinicis_sense_millora += 1
+            # debug
+            # print(f"Reinicis sense millora en acabar: {reinicis_sense_millora}")
+            # print(f"Iteracions totals: {iteracions_totals}")
+        # ret
         return millor_estat_global, historic_cost
