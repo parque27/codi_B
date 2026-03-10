@@ -4,7 +4,7 @@ from problemes.problema import ProblemaCercaLocal
 
 class HillClimbing(AlgoritmeCercaLocal):
 
-    def __init__(self, K=500, max_reinicis_sense_millora=50):
+    def __init__(self, K, max_reinicis_sense_millora):
         """
         :param K: nombre màxim d'iteracions totals
         :param max_reinicis_sense_millora: criteri d'aturada addicional;
@@ -25,10 +25,10 @@ class HillClimbing(AlgoritmeCercaLocal):
         :param problema: instància d'un ProblemaCercaLocal
         :return:
             millor_estat_global: millor estat trobat en tots els reinicis
-            historic_cost: llista amb el millor cost global after de cada iteració
+            historic_cost: llista amb el millor cost global a cada iteració
         """
 
-        # Inicialitzem el millor estat global com a None
+        # Inicialitzem el millor estat global
         millor_estat_global = None
         millor_cost_global = float('inf')  # Infinit, ja que volem minimitzar
 
@@ -37,9 +37,11 @@ class HillClimbing(AlgoritmeCercaLocal):
         reinicis_sense_millora = 0  # Comptador de reinicis consecutius sense millora global
 
         # Bucle principal: reinicis aleatoris
+        # Mirem que K < K (param) && reinicis < reinicis (param)
         while iteracions_totals < self.K and reinicis_sense_millora < self.max_reinicis_sense_millora:
 
-            # --- INICI D'UN NOU REINICI ---
+            # Guardem el millor cost global ABANS d'aquest reinici per comparar després
+            millor_cost_abans_reinici = millor_cost_global
 
             # Partim d'un estat inicial aleatori en cada reinici
             estat_actual = problema.estat_inicial()
@@ -63,7 +65,6 @@ class HillClimbing(AlgoritmeCercaLocal):
                 cost_millor_vei = problema.cost(millor_vei)
 
                 # Si el millor veí no millora l'estat actual, mínim local assolit
-                # Aturem el hill climbing local i fem un nou reinici
                 if not problema.es_millor(millor_vei, estat_actual):
                     break
 
@@ -76,16 +77,16 @@ class HillClimbing(AlgoritmeCercaLocal):
                     millor_estat_global = estat_actual
                     millor_cost_global = cost_actual
 
-                # Afegim el millor cost global actual a l'historial
+                # Afegim el millor cost global a l'historial
                 historic_cost.append(millor_cost_global)
                 iteracions_totals += 1
 
-            # --- ACTUALITZEM EL COMPTADOR DE REINICIS SENSE MILLORA ---
-
-            # Si aquest reinici no ha millorat el millor global, incrementem el comptador
-            if cost_actual >= millor_cost_global:
-                reinicis_sense_millora += 1
+            # Comparem el millor cost global ABANS i DESPRÉS del reinici
+            if millor_cost_global < millor_cost_abans_reinici:
+                reinicis_sense_millora = 0  # Aquest reinici ha millorat el global
             else:
-                reinicis_sense_millora = 0
+                reinicis_sense_millora += 1  # Aquest reinici no ha aportat res nou
+            print(f"Reinicis sense millora en acabar: {reinicis_sense_millora}")
+            print(f"Iteracions totals: {iteracions_totals}")
 
         return millor_estat_global, historic_cost

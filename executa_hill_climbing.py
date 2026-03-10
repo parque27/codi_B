@@ -25,7 +25,7 @@ def main():
 
     """ EXECUTA ALGORITME """
 
-    algo = HillClimbing(K=500, max_reinicis_sense_millora=50)
+    algo = HillClimbing(K=20, max_reinicis_sense_millora=1)
     solucio, historic_cost = algo.executa(problema)
 
     print("Solució:",solucio)
