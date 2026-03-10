@@ -25,12 +25,12 @@ def main():
 
     """ EXECUTA ALGORITME """
 
-    algo = HillClimbing()
+    algo = HillClimbing(K=500, max_reinicis_sense_millora=50)
     solucio, historic_cost = algo.executa(problema)
 
     print("Solució:",solucio)
     print("Cost final:", historic_cost[-1])
-
+    
     print("Num. iterations:", len(historic_cost))
     print("Històric de cost:", historic_cost)
 

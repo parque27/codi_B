@@ -1,3 +1,7 @@
+import random
+import copy
+from problemes.problema import ProblemaCercaLocal
+
 class ElMeuProblema(ProblemaCercaLocal):
     def __init__(self, n, costs_unitaris, penal_parelles, nombre_ideal, alpha):
 
